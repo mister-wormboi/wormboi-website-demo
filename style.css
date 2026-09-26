@@ -93,68 +93,6 @@ body {
   cursor: zoom-in;
 }
 
-.player {
-  position: relative;
-  z-index: 1;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-top: 8px;
-  opacity: .6;
-  font-size: 10px;
-  pointer-events: none;
-  transition: opacity .3s ease;
-}
-
-.player:hover { opacity: 1; }
-
-.player .btn {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 0;
-  border: 0;
-  background: transparent;
-  color: inherit;
-  font: inherit;
-  text-align: left;
-  cursor: pointer;
-  pointer-events: auto;
-}
-
-.player .btn:disabled { cursor: not-allowed; }
-
-.btn::before {
-  display: inline-block;
-  width: 6px;
-  height: 6px;
-  background: #aaa;
-  content: '';
-  clip-path: polygon(0 0, 100% 50%, 0 100%);
-}
-
-.player.unavailable .btn::before {
-  border: 1px solid #777;
-  background: transparent;
-  clip-path: none;
-}
-
-.player.playing .btn::before {
-  background: linear-gradient(to right, #aaa 0 2px, transparent 2px 4px, #aaa 4px 6px);
-  clip-path: none;
-}
-
-.line {
-  flex: 1;
-  height: 1px;
-  background: #333;
-  pointer-events: none;
-}
-
-.time {
-  white-space: nowrap;
-  pointer-events: none;
-}
 
 .footer {
   display: flex;
@@ -229,16 +167,29 @@ body {
 
 .gallery-nav {
   top: 50%;
-  padding: 16px 20px;
+  display: grid;
+  width: 56px;
+  height: 64px;
+  padding: 0;
   transform: translateY(-50%);
-  border: 1px solid rgba(255, 255, 255, .2);
-  background: rgba(0, 0, 0, .5);
-  color: #fff;
-  font-size: 32px;
+  border: 0;
+  background: transparent;
+  color: #ddd;
+  place-items: center;
   user-select: none;
 }
 
-.gallery-nav:hover { background: rgba(255, 255, 255, .15); }
+.gallery-nav svg {
+  width: 28px;
+  height: 28px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.5;
+  stroke-linecap: square;
+  stroke-linejoin: miter;
+}
+
+.gallery-nav:hover { color: #fff; }
 .gallery-nav.prev { left: 20px; }
 .gallery-nav.next { right: 20px; }
 
@@ -328,7 +279,7 @@ body {
   .grid { column-gap: 28px; padding: 54px 32px; }
   .archive-header { padding-right: 32px; padding-left: 32px; }
   .footer { padding: 30px 32px; }
-  .gallery-nav { padding: 12px; font-size: 24px; }
+  .gallery-nav { width: 44px; height: 52px; }
   .gallery-nav.prev { left: 8px; }
   .gallery-nav.next { right: 8px; }
 }
@@ -336,3 +287,4 @@ body {
 @media (max-width: 480px) {
   .grid { column-count: 1; padding-right: 24px; padding-left: 24px; }
 }
+

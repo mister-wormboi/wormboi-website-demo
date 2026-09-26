@@ -1,21 +1,19 @@
 'use strict';
 
 const photos = [
-  { image: 'photo/МАЛЫШ.bmp', date: '2026-03-20', artist: 'The Beatles', title: 'Something' },
-  { image: 'photo/greenroom.jpg', date: '2026-04-13', artist: 'Crystal Castles', title: 'Fleece' },
-  { image: 'photo/mayhem.png', date: '2026-03-26', artist: 'Mayhem', title: 'Deathcrush' },
-  { image: 'photo/restore.jpg', date: '2026-03-22', artist: 'Deftones', title: 'Drive' },
-  { image: 'photo/クソ写真家.jpg', date: '2026-01-20', artist: 'Cafuné', title: 'Tek It (Acoustic)' },
-  { image: 'photo/ボーイワーム.png', date: '2026-07-12', artist: 'NIN', title: 'I Do Not Want This' },
-  { image: 'photo/pandemonian.png', date: '2026-07-13', artist: 'The Cure', title: 'Lovesong' },
-  { image: 'photo/01.25.sharic.jpg', date: '2025-01-15', artist: 'Death Grips', title: 'Guillotine' },
-  { image: 'photo/crist.JPG', date: '2025-01-09', artist: 'bladee', title: 'reborn' },
-  { image: 'photo/crystal castles.jpg', date: '2025-05-08', artist: 'Crystal Castles', title: 'Alice Practice' },
-  { image: 'photo/first.gif', date: '2024-07-08', artist: 'Salem', title: 'King Night' },
-  { image: 'photo/lost.jpeg', date: '2025-01-19', artist: 'Anri', title: 'Kanashimi ga Tomaranai (I CAN’T STOP THE LONELINESS)' },
-  { image: 'photo/punk.jpeg', date: '2024-07-30', artist: 'Acid Bath', title: 'Dr. Seuss Is Dead' },
-  { image: 'photo/running.jpeg', date: '2025-01-13', artist: 'Marilyn Manson', title: 'Running To The Edge Of The World' },
-  { image: 'photo/selfmade.jpg', date: '2024-08-29', artist: 'Philip Glass', title: 'Prophecies' }
+  { image: 'photo/МАЛЫШ.webp', date: '2026-03-20' },
+  { image: 'photo/greenroom.webp', date: '2026-04-13' },
+  { image: 'photo/mayhem.webp', date: '2026-03-26' },
+  { image: 'photo/restore.webp', date: '2026-03-22' },
+  { image: 'photo/クソ写真家.webp', date: '2026-01-20' },
+  { image: 'photo/ボーイワーム.webp', date: '2026-07-12' },
+  { image: 'photo/pandemonian.webp', date: '2026-07-13' },
+  { image: 'photo/01.25.sharic.webp', date: '2025-01-15' },
+  { image: 'photo/crist.webp', date: '2025-01-09' },
+  { image: 'photo/crystal castles.webp', date: '2025-05-08' },
+  { image: 'photo/lost.webp', date: '2025-01-19' },
+  { image: 'photo/running.webp', date: '2025-01-13' },
+  { image: 'photo/selfmade.webp', date: '2024-08-29' }
 ].sort((a, b) => b.date.localeCompare(a.date));
 
 const grid = document.getElementById('photo-grid');
@@ -29,7 +27,7 @@ function createCard(photo, index) {
 
   const image = document.createElement('img');
   image.src = `static/${photo.image}`;
-  image.alt = `${photo.artist} — ${photo.title}`;
+  image.alt = photo.image.split('/').pop();
   image.loading = index < 2 ? 'eager' : 'lazy';
   image.decoding = 'async';
   image.tabIndex = 0;
@@ -43,25 +41,7 @@ function createCard(photo, index) {
     }
   });
 
-  const player = document.createElement('div');
-  player.className = 'player unavailable';
-
-  const trackName = document.createElement('button');
-  trackName.className = 'btn';
-  trackName.type = 'button';
-  trackName.disabled = true;
-  trackName.textContent = `${photo.artist} – ${photo.title}`;
-  trackName.title = 'Аудиофайл отсутствует в локальном архиве';
-
-  const progress = document.createElement('div');
-  progress.className = 'line';
-
-  const time = document.createElement('span');
-  time.className = 'time';
-  time.textContent = 'audio unavailable';
-
-  player.append(trackName, progress, time);
-  card.append(image, player);
+  card.append(image);
   return card;
 }
 
@@ -76,7 +56,7 @@ function openGallery(index) {
 function updateGalleryImage() {
   const photo = photos[galleryIndex];
   galleryImage.src = `static/${photo.image}`;
-  galleryImage.alt = `${photo.artist} — ${photo.title}`;
+  galleryImage.alt = photo.image.split('/').pop();
 }
 
 function closeGallery() {
@@ -132,3 +112,31 @@ document.addEventListener('keydown', event => {
 function closeDisclaimer() {
   document.getElementById('win98').classList.remove('active');
 }
+
+document.querySelectorAll('.card').forEach(card => {
+  const image = card.querySelector('img');
+  let rotateX = 0;
+  let rotateY = 0;
+  let targetX = 0;
+  let targetY = 0;
+
+  card.addEventListener('mousemove', event => {
+    const bounds = card.getBoundingClientRect();
+    targetX = -(event.clientY - bounds.top - bounds.height / 2) / 80;
+    targetY = (event.clientX - bounds.left - bounds.width / 2) / 80;
+  });
+
+  card.addEventListener('mouseleave', () => {
+    targetX = 0;
+    targetY = 0;
+  });
+
+  function animateCard() {
+    rotateX += (targetX - rotateX) * 0.08;
+    rotateY += (targetY - rotateY) * 0.08;
+    image.style.transform = `translateZ(-20px) scale(1.05) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+    requestAnimationFrame(animateCard);
+  }
+
+  if (matchMedia('(hover: hover)').matches) animateCard();
+});
