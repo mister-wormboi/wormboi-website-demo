@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="photo archive / sound / memory">
+  <title>ボーイワーム (wörmboi)</title>
+  <link rel="icon" type="image/png" href="static/assets/icons/icon.png">
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+  <section class="hero" id="open-disclaimer" aria-label="Открыть информацию об архиве">
+    <h1>好きなことをしてください</h1>
+    <img src="static/assets/hero.png" alt="Иллюстрация архива">
+    <h2>wormboi website</h2>
+  </section>
+  <section class="archive-header">
+    <span class="archive-title">(w_w) photo archive</span><span class="archive-line"></span>
+  </section>
+  <main class="grid" id="photo-grid" aria-label="Фотоархив"></main>
+  <audio id="audio" preload="none"></audio>
+  <section class="archive-header"><span class="archive-line"></span></section>
+  <footer class="footer">
+    <div class="footer-left">
+      <a href="https://t.me/wormboi_4532" target="_blank" rel="noopener noreferrer">[t] telegram</a>
+      <a href="https://www.instagram.com/wormboi_4532" target="_blank" rel="noopener noreferrer">[i] instagram</a>
+    </div>
+    <div class="footer-right"><a href="https://drive.google.com/drive/folders/16wkfFaMaAKsmU9p_LpgdK3HJBNB4IvK-?usp=sharing" target="_blank" rel="noopener noreferrer">[↓] download</a></div>
+  </footer>
+  <div class="gallery" id="gallery" aria-modal="true" role="dialog" aria-label="Просмотр фотографий">
+    <button class="gallery-close" type="button" aria-label="Закрыть">×</button>
+    <button class="gallery-nav prev" type="button" aria-label="Предыдущее фото">←</button>
+    <img class="gallery-img" src="" alt="">
+    <button class="gallery-nav next" type="button" aria-label="Следующее фото">→</button>
+  </div>
+  <div class="win98" id="win98" role="dialog" aria-modal="true" aria-label="Disclaimer">
+    <div class="win98-window">
+      <div class="win98-header"><span>Disclaimer</span><button class="win98-close" type="button" aria-label="Закрыть">×</button></div>
+      <div class="win98-body"><div class="win98-icon">i</div><div>this is a non-commercial archive.<br>all rights belong to owners.<br><br>created for preservation of art.</div></div>
+      <div class="win98-footer"><button class="win98-btn" type="button">OK</button></div>
+    </div>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>
