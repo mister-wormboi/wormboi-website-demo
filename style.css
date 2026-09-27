@@ -144,54 +144,20 @@ body {
   object-fit: contain;
 }
 
-.gallery-close,
-.gallery-nav {
+.gallery-close {
   position: fixed;
   z-index: 10000;
-  border-radius: 0;
-  color: #aaa;
-  cursor: pointer;
-  font-family: 'JetBrains Mono', monospace;
-}
-
-.gallery-close {
   top: 20px;
   right: 25px;
   padding: 8px;
   border: 0;
   background: transparent;
   font-size: 28px;
+  font-family: 'JetBrains Mono', monospace;
 }
 
 .gallery-close:hover { color: #fff; }
 
-.gallery-nav {
-  top: 50%;
-  display: grid;
-  width: 56px;
-  height: 64px;
-  padding: 0;
-  transform: translateY(-50%);
-  border: 0;
-  background: transparent;
-  color: #ddd;
-  place-items: center;
-  user-select: none;
-}
-
-.gallery-nav svg {
-  width: 28px;
-  height: 28px;
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 1.5;
-  stroke-linecap: square;
-  stroke-linejoin: miter;
-}
-
-.gallery-nav:hover { color: #fff; }
-.gallery-nav.prev { left: 20px; }
-.gallery-nav.next { right: 20px; }
 
 .win98 {
   position: fixed;
@@ -297,8 +263,6 @@ body {
 
   .card { margin-bottom: 64px; }
   .gallery-img { max-width: 86vw; max-height: 82vh; }
-  .gallery-nav.prev { left: 8px; }
-  .gallery-nav.next { right: 8px; }
 }
 
 @media (max-width: 600px) {
@@ -351,10 +315,6 @@ body {
   }
 
   .gallery-close { top: max(8px, env(safe-area-inset-top)); right: 12px; }
-  .gallery-nav { width: 40px; height: 48px; }
-  .gallery-nav svg { width: 22px; height: 22px; }
-  .gallery-nav.prev { left: 2px; }
-  .gallery-nav.next { right: 2px; }
 
   .win98-window {
     width: min(320px, calc(100vw - 40px));

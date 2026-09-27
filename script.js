@@ -14,11 +14,12 @@ const photos = [
   { image: 'photo/lost.webp', date: '2025-01-19' },
   { image: 'photo/running.webp', date: '2025-01-13' },
   { image: 'photo/selfmade.webp', date: '2024-08-29' }
-].sort((a, b) => b.date.localeCompare(a.date));
+].sort((first, second) => second.date.localeCompare(first.date));
 
 const grid = document.getElementById('photo-grid');
 const gallery = document.getElementById('gallery');
 const galleryImage = gallery.querySelector('.gallery-img');
+const disclaimer = document.getElementById('win98');
 let galleryIndex = 0;
 
 function createCard(photo, index) {
@@ -26,19 +27,20 @@ function createCard(photo, index) {
   card.className = 'card';
 
   const image = document.createElement('img');
+  const filename = photo.image.split('/').pop();
   image.src = `static/${photo.image}`;
-  image.alt = photo.image.split('/').pop();
-  image.loading = index < 2 ? 'eager' : 'lazy';
+  image.alt = filename;
+  image.loading = index === 0 ? 'eager' : 'lazy';
+  image.fetchPriority = index === 0 ? 'high' : 'auto';
   image.decoding = 'async';
   image.tabIndex = 0;
   image.setAttribute('role', 'button');
-  image.setAttribute('aria-label', `Открыть фото: ${photo.image.split('/').pop()}`);
+  image.setAttribute('aria-label', `Открыть фото: ${filename}`);
   image.addEventListener('click', () => openGallery(index));
   image.addEventListener('keydown', event => {
-    if (event.key === 'Enter' || event.key === ' ') {
-      event.preventDefault();
-      openGallery(index);
-    }
+    if (event.key !== 'Enter' && event.key !== ' ') return;
+    event.preventDefault();
+    openGallery(index);
   });
 
   card.append(image);
@@ -69,25 +71,38 @@ function moveGallery(step) {
 }
 
 gallery.querySelector('.gallery-close').addEventListener('click', closeGallery);
-gallery.querySelector('.prev').addEventListener('click', () => moveGallery(-1));
-gallery.querySelector('.next').addEventListener('click', () => moveGallery(1));
 gallery.addEventListener('click', event => {
   if (event.target === gallery) closeGallery();
 });
 document.addEventListener('keydown', event => {
-  if (!gallery.classList.contains('active')) return;
-  if (event.key === 'Escape') closeGallery();
-  if (event.key === 'ArrowRight') moveGallery(1);
-  if (event.key === 'ArrowLeft') moveGallery(-1);
+  if (gallery.classList.contains('active')) {
+    if (event.key === 'Escape') closeGallery();
+    if (event.key === 'ArrowRight') moveGallery(1);
+    if (event.key === 'ArrowLeft') moveGallery(-1);
+  } else if (event.key === 'Escape') {
+    disclaimer.classList.remove('active');
+  }
+});
+
+document.getElementById('open-disclaimer').addEventListener('click', () => {
+  disclaimer.classList.add('active');
+});
+document.querySelector('.win98-close').addEventListener('click', () => {
+  disclaimer.classList.remove('active');
+});
+document.querySelector('.win98-btn').addEventListener('click', () => {
+  disclaimer.classList.remove('active');
+});
+disclaimer.addEventListener('click', event => {
+  if (event.target === disclaimer) disclaimer.classList.remove('active');
 });
 
 if ('IntersectionObserver' in window) {
   const observer = new IntersectionObserver((entries, currentObserver) => {
     entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add('visible');
-        currentObserver.unobserve(entry.target);
-      }
+      if (!entry.isIntersecting) return;
+      entry.target.classList.add('visible');
+      currentObserver.unobserve(entry.target);
     });
   }, { threshold: 0.08 });
   document.querySelectorAll('.card').forEach(card => observer.observe(card));
@@ -95,48 +110,37 @@ if ('IntersectionObserver' in window) {
   document.querySelectorAll('.card').forEach(card => card.classList.add('visible'));
 }
 
-document.getElementById('open-disclaimer').addEventListener('click', () => {
-  document.getElementById('win98').classList.add('active');
-});
+if (matchMedia('(hover: hover)').matches) {
+  document.querySelectorAll('.card').forEach(card => {
+    const image = card.querySelector('img');
+    let frame = 0;
+    let rotateX = 0;
+    let rotateY = 0;
+    let targetX = 0;
+    let targetY = 0;
 
-document.querySelector('.win98-close').addEventListener('click', closeDisclaimer);
-document.querySelector('.win98-btn').addEventListener('click', closeDisclaimer);
-document.getElementById('win98').addEventListener('click', event => {
-  if (event.target.id === 'win98') closeDisclaimer();
-});
+    function animate() {
+      rotateX += (targetX - rotateX) * 0.12;
+      rotateY += (targetY - rotateY) * 0.12;
+      image.style.transform = `translateZ(-20px) scale(1.05) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
 
-document.addEventListener('keydown', event => {
-  if (event.key === 'Escape') closeDisclaimer();
-});
+      if (Math.abs(targetX - rotateX) > 0.02 || Math.abs(targetY - rotateY) > 0.02) {
+        frame = requestAnimationFrame(animate);
+      } else {
+        frame = 0;
+      }
+    }
 
-function closeDisclaimer() {
-  document.getElementById('win98').classList.remove('active');
+    card.addEventListener('mousemove', event => {
+      const bounds = card.getBoundingClientRect();
+      targetX = -(event.clientY - bounds.top - bounds.height / 2) / 80;
+      targetY = (event.clientX - bounds.left - bounds.width / 2) / 80;
+      if (!frame) frame = requestAnimationFrame(animate);
+    });
+    card.addEventListener('mouseleave', () => {
+      targetX = 0;
+      targetY = 0;
+      if (!frame) frame = requestAnimationFrame(animate);
+    });
+  });
 }
-
-document.querySelectorAll('.card').forEach(card => {
-  const image = card.querySelector('img');
-  let rotateX = 0;
-  let rotateY = 0;
-  let targetX = 0;
-  let targetY = 0;
-
-  card.addEventListener('mousemove', event => {
-    const bounds = card.getBoundingClientRect();
-    targetX = -(event.clientY - bounds.top - bounds.height / 2) / 80;
-    targetY = (event.clientX - bounds.left - bounds.width / 2) / 80;
-  });
-
-  card.addEventListener('mouseleave', () => {
-    targetX = 0;
-    targetY = 0;
-  });
-
-  function animateCard() {
-    rotateX += (targetX - rotateX) * 0.08;
-    rotateY += (targetY - rotateY) * 0.08;
-    image.style.transform = `translateZ(-20px) scale(1.05) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
-    requestAnimationFrame(animateCard);
-  }
-
-  if (matchMedia('(hover: hover)').matches) animateCard();
-});
