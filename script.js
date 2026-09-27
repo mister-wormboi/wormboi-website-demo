@@ -6,7 +6,7 @@ const photos = [
   { image: 'photo/mayhem.webp', date: '2026-03-26' },
   { image: 'photo/restore.webp', date: '2026-03-22' },
   { image: 'photo/クソ写真家.webp', date: '2026-01-20' },
-  { image: 'photo/ボーイワーム.webp', date: '2026-07-12' },
+  { image: 'photo/wormboi.webp', date: '2026-07-12' },
   { image: 'photo/pandemonian.webp', date: '2026-07-13' },
   { image: 'photo/01.25.sharic.webp', date: '2025-01-15' },
   { image: 'photo/crist.webp', date: '2025-01-09' },
